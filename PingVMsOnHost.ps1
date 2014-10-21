@@ -6,7 +6,7 @@ Ping-VMs-On-Host
 
 .DESCRIPTION
 
-Performs continuous of all VMs on an ESX host. Successful pings are displayed in white and failed pings are displayed in red.
+Performs ping of all VMs on an ESX host. Successful pings are displayed in white and failed pings are displayed in red.
 
 
 #>
