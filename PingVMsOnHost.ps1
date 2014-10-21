@@ -19,7 +19,7 @@ param
 );
 $computers = Get-VMHost | Where-Object {$_.Name -like "$Phost*"} | GET-VM | Select-Object -Property Name
 do {
-$i
+$i=1
 Foreach ($computer in $computers) {
 $i++
 $computer = ($computer).name
