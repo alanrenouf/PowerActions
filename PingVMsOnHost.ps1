@@ -15,9 +15,8 @@ param
 (
    [Parameter(Mandatory=$true)]
    [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
-   $vParam
+   $Phost
 );
-$Phost = $vParam
 $computers = Get-VMHost | Where-Object {$_.Name -like "$Phost*"} | GET-VM | Select-Object -Property Name
 do {
 Foreach ($computer in $computers) {
