@@ -19,7 +19,9 @@ param
 );
 $computers = Get-VMHost | Where-Object {$_.Name -like "$Phost*"} | GET-VM | Select-Object -Property Name
 do {
+$i
 Foreach ($computer in $computers) {
+$i++
 $computer = ($computer).name
 $results = gwmi -query "SELECT * FROM Win32_PingStatus WHERE Address = '$computer'"
 if ($results.StatusCode -eq 0) {
@@ -30,4 +32,4 @@ Write-Error "$computer is not Pingable"
 }
 }
 }
-While ((Get-VMHost | Where-Object {$_.Name -like "$Phost*"} | GET-VM | Select-Object -Property Name).count -ne 999)
+While ($i -le 9999)
