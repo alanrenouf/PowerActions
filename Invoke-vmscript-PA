@@ -1,0 +1,50 @@
+<#
+.LABEL
+Invoke_VMscript
+.DESCRIPTION
+Invoke commands in the guest OS through PowerActions.
+#>
+
+param
+(
+[Parameter(Mandatory=$true)]
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
+$vm
+);
+
+Function Invoke-vmcommand {
+# Prompt for Command to execute on guest OS
+$fields = new-object "System.Collections.ObjectModel.Collection``1[[System.Management.Automation.Host.FieldDescription]]"
+$f = New-Object System.Management.Automation.Host.FieldDescription "Enter the command to execute via Invoke-vmscript"
+$f.DefaultValue = ""
+$f.Label = "&Script Text"
+$fields.Add($f)
+$results = $Host.UI.Prompt( "ScriptBlock", "Enter command to execute via Invoke-vmscript", $fields )
+$script = $results.Values
+
+# Run the command
+Invoke-VMScript -VM $vm -ScriptText $script -GuestCredential $cred
+}
+
+Function Run-again {
+$title = "Run another?"
+$message = "Execute another command on $vm?"
+$yes = New-Object System.Management.Automation.Host.ChoiceDescription "&yes", "Prompts for another ScriptBlock"
+$no = New-Object System.Management.Automation.Host.ChoiceDescription "&no", "Exit the script"
+$options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
+$result = $host.ui.PromptForChoice($title, $message, $options, 0) 
+
+switch ($result) {
+        0 {Invoke-vmcommand
+           Run-again}
+        1 {Write-Host "Finished running commands"
+           Exit}
+    }
+}
+
+# Prompt for credentials
+$cred = $Host.ui.PromptForCredential("","Enter a user account with rights execute the command on the guest OS","","")
+
+Invoke-vmcommand
+
+Run-again
