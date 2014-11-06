@@ -1,8 +1,12 @@
 <#
 .LABEL
-Invoke_VMscript
+Invoke shell commands on the selected VM
 .DESCRIPTION
-Invoke commands in the guest OS through PowerActions.
+Written for PowerActions to use Invoke-VMScript. Invoke shell commands on the guest OS of the selected VM through
+PowerActions. Script prompts for guest OS credentials, then prompts for the command to execute. Output is returned
+in the console window. The script then prompts you to execute another command. Each time you run a command is a
+new session to the VM. If you want to chain commands together it must be done in a single scriptblock as it is
+in the invoke-vmscript Powercli command.
 #>
 
 param
