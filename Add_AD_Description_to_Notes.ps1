@@ -4,16 +4,19 @@ Adds AD Description to Notes
 
 .DESCRIPTION
 This  version of the script requires Quest Active Roles management plugin or can be modified to use MS AD module. 
-This script will query Active Directory and find the Active Directory description for each VM, 
+This script will Query Active directory and find the Active directory description for each VM, 
 then write the description to the Notes property of the VM. If a computer account does not
-exist in AD it will leave the notes blank.
+exist in AD it will leave the notes blank. 
 http://www.quest.com/powershell/activeroles-server.aspx
 #>
 param
 (
    [Parameter(Mandatory=$true)]
    [VMware.VimAutomation.ViCore.Types.V1.Inventory.Folder]
-   $vParam
+   $vParam,
+   [Parameter(mandatory=$true)]
+   [String]
+   $Domain
 );
 Get-PSSnapin -Registered "Quest.ActiveRoles*" | Add-PSSnapin -PassThru
 
@@ -24,7 +27,7 @@ $cred = get-credential
 $i = 1
 DO {
 $i++
-connect-qadservice vectren.com -Credential $cred | out-null
+connect-qadservice $Domain -Credential $cred | out-null
 $test = Get-QADRootDSE
 start-sleep -Seconds 5
 } Until (($test -ne $null) -or ($i -eq 5))
@@ -36,7 +39,7 @@ Exit
 
 # Pull your VMs into an array
 $Guests = Get-VM
-# Loop through the array to read the AD Description field to set the Annotation in vCenter
+
 ForEach ($Guest in $Guests) {
 # Clear the variable just in case there is no match. It may keep the previous value.
 Clear-Variable Description
